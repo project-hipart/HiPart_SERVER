@@ -13,15 +13,14 @@ router.post('/', async (req, res) => {
     const selectIdResult = await db.queryParam_Parse(selectIdQuery, req.body.user_id);
     const signupQuery = 'INSERT INTO user (user_id,user_name,user_pw,salt) VALUES (?, ?, ?, ?)';
 
-
+    console.log(selectIdResult);
     if (selectIdResult[0] == null) {// 이미 존재
         console.log("일치 없음");
         const buf = await crypto.randomBytes(64);
         const salt = buf.toString('base64');
         const hashedPw = await crypto.pbkdf2(req.body.user_pw.toString(), salt, 1000, 32, 'SHA512');
-        
-
-        const signupResult = await db.queryParam_Parse(signupQuery, [req.body.user_id, req.body.user_name, hashedPw.toString('base64'), salt]);
+        const signupResult = await db.queryParam_Arr(signupQuery, [req.body.user_id, req.body.user_name, hashedPw.toString('base64'), salt]);
+        console.log(signupResult);
         if (!signupResult) {
             res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.SIGNUP_FAIL));
         } else { //쿼리문이 성공했을 때
