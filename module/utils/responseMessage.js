@@ -60,6 +60,9 @@ module.exports = {
   NO_SELECT_AUTHORITY: "조회 권한 없음.",
   USER_SELECTED: "회원 조회 성공.",
 
+  SUCCESS_INSERT_WORK: "작품 등록 성공",
+  FAILED_INSERT_WORK: "작품 등록 실패",
+
   NOT_DUPLICATED: " 중복된 값이 없습니다.",
   DUPLICATED: " 이미 중복된 값이 있습니다.",
 
