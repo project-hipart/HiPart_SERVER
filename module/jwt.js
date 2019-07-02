@@ -1,6 +1,6 @@
 var randtoken = require('rand-token');
 const jwt = require('jsonwebtoken');
-const secretOrPrivateKey = "jwtSecretKey!";
+const secretOrPrivateKey = "HipartKey";
 const options = {
     algorithm: "HS256",
     expiresIn: "14d",
@@ -17,8 +17,9 @@ module.exports = {
     sign: (user) => {
         const payload = {
             id: user.user_id,
-            name: user.user_name,
-            idx: user.user_idx
+            nickname: user.user_nickname,
+            idx: user.user_idx,
+            type: user.user_type,
         };
 
         const result = {
