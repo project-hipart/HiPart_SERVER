@@ -20,6 +20,8 @@ app.set('port', port);
  */
 
 // 희연습
+// 변경 한번 해봐야지
+
 var server = http.createServer(app);
 
 /**
