@@ -11,8 +11,8 @@ const db = require('../../module/pool');
 const jwtUtils = require('../../module/jwt');
 
 router.post('/', async (req, res) => {
-    const selectUserQuery = 'SELECT * FROM user WHERE user_id = ?'
-    const selectUserResult = await db.queryParam_Parse(selectUserQuery, req.body.user_id);
+    const selectUserQuery = 'SELECT * FROM user WHERE user_email = ?'
+    const selectUserResult = await db.queryParam_Parse(selectUserQuery, req.body.user_email);
     //console.log(selectUserResult[0])//유저 정보
 
     if (selectUserResult[0] == null) {//id가 존재하지 않으면
@@ -25,8 +25,8 @@ router.post('/', async (req, res) => {
         if (selectUserResult[0].user_pw == hashedEnterPw.toString('base64')) {
             const tokens = jwtUtils.sign(selectUserResult[0]);
             const refreshToken = tokens.refreshToken;
-            const refreshTokenUpdateQuery = "UPDATE user SET refresh_token = ? WHERE user_id= ?";
-            const refreshTokenUpdateResult = await db.queryParam_Parse(refreshTokenUpdateQuery, [refreshToken, req.body.user_id]);
+            const refreshTokenUpdateQuery = "UPDATE user SET refresh_token = ? WHERE user_email= ?";
+            const refreshTokenUpdateResult = await db.queryParam_Parse(refreshTokenUpdateQuery, [refreshToken, req.body.user_email]);
             if (!refreshTokenUpdateResult) {
                 res.status(200).send(defaultRes.successTrue(statusCode.DB_ERROR, "refreshtoken DB등록 오류 "));
             } else {
