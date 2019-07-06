@@ -9,4 +9,6 @@ router.use("/banner", require("./banner/index"));
 router.use("/main", require("./main/index"));
 router.use("/filter", require("./filter"));
 router.use("/pick", require("./pick"));
+router.use("/hifive", require("./hifive"));
+router.use("/mypage", require("./mypage"));
 module.exports = router;
