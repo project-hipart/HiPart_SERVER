@@ -1,4 +1,5 @@
 module.exports = {
+  DB_ERROR: "DB 오류",
   NULL_VALUE: "필요한 값이 없습니다",
   OUT_OF_VALUE: "파라미터 값이 잘못되었습니다",
 
@@ -62,6 +63,22 @@ module.exports = {
 
   SUCCESS_INSERT_WORK: "작품 등록 성공",
   FAILED_INSERT_WORK: "작품 등록 실패",
+
+  SUCCESS_DELETE_WORK: "작품 삭제 성공",
+  FAILED_DELETE_WORK: "작품 삭제 실패",
+  EMPTY_WORK: "작품이 존재하지 않습니다",
+
+  SUCCESS_SENT_EMAIL: "이메일 전송 성공",
+  FAILED_SENT_EMAIL: "이메일 전송 실패",
+
+  SUCCESS_MY_PAGE: "마이페이지 조회 성공",
+  FAILED_MY_PAGE: "마이페이지 조회 실패",
+
+  SUCCESS_USER_LIST: "회원정보 조회 성공",
+  FAILED_USER_LIST: "회원정보 조회 실패",
+
+  SUCCESS_USER_UPDATE: "회원정보 수정 성공",
+  NOT_CORRECT_PASSWORD: "현재 비밀번호가 일치하지 않습니다",
 
   NOT_DUPLICATED: " 중복된 값이 없습니다.",
   DUPLICATED: " 이미 중복된 값이 있습니다.",
