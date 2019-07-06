@@ -72,7 +72,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "디비 오류"));
     } else { //쿼리문이 성공했을 때
         for (let i = 0; i < selectResult.length; i++) {
-            const selectUserQuery = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_field, detail_oneline, concept, lang, pd, etc" +
+            const selectUserQuery = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user.user_idx=?";
             const selectUserResult = await db.queryParam_Arr(selectUserQuery, [selectResult[i].pick_to]);
             resData.push(selectUserResult[0]);

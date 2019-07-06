@@ -1,27 +1,33 @@
 var express = require('express');
 var router = express.Router();
 
+const authUtil = require("../../module/utils/authUtils");
+
 const defaultRes = require('../../module/utils/utils');
 const statusCode = require('../../module/utils/statusCode');
 const resMessage = require('../../module/utils/responseMessage');
 const db = require('../../module/pool');
 
 
-router.get('/:nickname', async (req, res) => {
-    const SelectUserQuery = "SELECT user_type FROM user WHERE user_nickname = ?"
+router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
+    const SelectUserQuery = "SELECT * FROM user WHERE user_nickname = ?"
     const SelectDetailResult = await db.queryParam_Arr(SelectUserQuery, [req.params.nickname]);
 
     if (SelectDetailResult[0] == null) {
         res.status(200).send(defaultRes.successTrue(statusCode.OK, "만족하는 유저가 없습니다."));
     } else {
+        var hifiveState = 0;
         const type = Number(SelectDetailResult[0].user_type);
-
+        const SelectHifveQuery = "SELECT * FROM hifivelist WHERE hifive_from =? AND hifive_to =?";
+        const SelectHifveResult = await db.queryParam_Arr(SelectHifveQuery, [req.decoded.idx, SelectDetailResult[0].user_idx]);
+        if (SelectHifveResult[0] != null) {
+            hifiveState = 1;
+        }
 
         var resCreData = {// 크리에이터 데이터
             user_nickname: "",
             user_img: "",
             user_type: 0,
-            detail_field: 0,
             detail_platform: 0,
             detail_subscriber: "",
             detail_oneline: "",
@@ -38,7 +44,6 @@ router.get('/:nickname', async (req, res) => {
             user_nickname: "",
             user_img: "",
             user_type: 0,
-            detail_field: 0,
             detail_platform: 0,
             detail_subscriber: "",
             detail_oneline: "",
@@ -56,6 +61,7 @@ router.get('/:nickname', async (req, res) => {
                     " JOIN creator ON user.user_idx = creator.user_idx" +
                     " WHERE user_nickname=?";
                 const SelectDetailResult = await db.queryParam_Arr(SelectDetailQuery, [req.params.nickname]);
+
                 if (!SelectDetailResult) {
                     res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
                 } else {
@@ -63,7 +69,6 @@ router.get('/:nickname', async (req, res) => {
                     resCreData.user_img = SelectDetailResult[0].user_img;
                     resCreData.user_type = SelectDetailResult[0].user_type;
                     resCreData.pick = SelectDetailResult[0].pick;
-                    resCreData.detail_field = SelectDetailResult[0].detail_field;
                     resCreData.detail_platform = SelectDetailResult[0].detail_platform;
                     resCreData.detail_subscriber = SelectDetailResult[0].detail_subscriber;
                     resCreData.detail_oneline = SelectDetailResult[0].detail_oneline;
@@ -80,7 +85,7 @@ router.get('/:nickname', async (req, res) => {
                         resCreData.title.push(SelectDetailResult[i].title);
                         resCreData.content.push(SelectDetailResult[i].content);
                     }
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resCreData));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resCreData }));
                 }
 
                 break;
@@ -104,7 +109,6 @@ router.get('/:nickname', async (req, res) => {
                     resTransData.user_img = SelectDetailResult3[0].user_img;
                     resTransData.user_type = SelectDetailResult3[0].user_type;
                     resCreData.pick = SelectDetailResult[0].pick;
-                    resTransData.detail_field = SelectDetailResult3[0].detail_field;
                     resTransData.detail_platform = SelectDetailResult3[0].detail_platform;
                     resTransData.detail_subscriber = SelectDetailResult3[0].detail_subscriber;
                     resTransData.detail_oneline = SelectDetailResult3[0].detail_oneline;
@@ -119,7 +123,7 @@ router.get('/:nickname', async (req, res) => {
                         resTransData.before.push(SelectDetailResult3[i].before1);
                         resTransData.after.push(SelectDetailResult3[i].after1);
                     }
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resTransData));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifive, resTransData }));
                 }
                 break;
             case 4: //기타

@@ -13,7 +13,7 @@ router.get('/:category/:select', async (req, res) => {// 문자열로만 된거 
     console.log(category);
     switch (category) {
         case 1://컨셉 선택
-            const SelectQuery1 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_field, detail_oneline, concept, lang, pd, etc" +
+            const SelectQuery1 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE concept=?";
             const SelectResult1 = await db.queryParam_Arr(SelectQuery1, req.params.select);
             if (!SelectResult1) {
@@ -23,7 +23,7 @@ router.get('/:category/:select', async (req, res) => {// 문자열로만 된거 
             }
             break;
         case 2://언어 선택
-            const SelectQuery2 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_field, detail_oneline, concept, lang, pd, etc" +
+            const SelectQuery2 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE lang=?";
             const SelectResult2 = await db.queryParam_Arr(SelectQuery2, req.params.select);
             if (!SelectResult2) {
@@ -33,7 +33,7 @@ router.get('/:category/:select', async (req, res) => {// 문자열로만 된거 
             }
             break;
         case 3://PD 선택
-            const SelectQuery3 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_field, detail_oneline, concept, lang, pd, etc" +
+            const SelectQuery3 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE pd=?";
             const SelectResult3 = await db.queryParam_Arr(SelectQuery3, req.params.select);
             if (!SelectResult3) {
@@ -43,7 +43,7 @@ router.get('/:category/:select', async (req, res) => {// 문자열로만 된거 
             }
             break;
         case 4://기타 선택
-            const SelectQuery4 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_field, detail_oneline, concept, lang, pd, etc" +
+            const SelectQuery4 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE etc=?";
             const SelectResult4 = await db.queryParam_Arr(SelectQuery3, req.params.select);
             if (!SelectResult4) {

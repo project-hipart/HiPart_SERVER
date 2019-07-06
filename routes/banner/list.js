@@ -8,8 +8,8 @@ const db = require('../../module/pool');
 router.get('/', async (req, res) => {
 
     banners = {
-        banner1: "",
-        banner2: "",
+        banner1: "https://igbb.s3.ap-northeast-2.amazonaws.com/",
+        banner2: "https://igbb.s3.ap-northeast-2.amazonaws.com/",
     }
 
     res.status(200).send(defaultRes.successTrue(statusCode.OK, "배너 조회 성공", banners));
