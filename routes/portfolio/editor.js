@@ -12,14 +12,14 @@ const db = require('../../module/pool');
 
 // 작품 등록
 router.post('/', upload.single('thumbnail'), authUtil.isLoggedin, async (req, res) => {
-    const editorInsertQuery = 'INSERT INTO editor (thumbnail, url, title, content, user_idx, createdAt) VALUES (?,?,?,?,?,?)'; 
-    const editorInsertResult = await db.queryParam_Arr(editorInsertQuery,[req.file.location, req.body.url, req.body.title, req.body.content, req.decoded.idx,
+    const editorInsertQuery = 'INSERT INTO editor (thumbnail, url, title, content, user_idx, createdAt) VALUES (?,?,?,?,?,?)';
+    const editorInsertResult = await db.queryParam_Arr(editorInsertQuery, [req.file.location, req.body.url, req.body.title, req.body.content, req.decoded.idx,
     moment().format('YYYY-MM-DD HH:mm:ss')]);
 
-    if(!editorInsertResult){
-        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.FAILED_INSERT_WORK)); 
-    }else{
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_INSERT_WORK));       
+    if (!editorInsertResult) {
+        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.FAILED_INSERT_WORK));
+    } else {
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_INSERT_WORK));
     }
 });
 
@@ -33,16 +33,16 @@ router.delete('/', authUtil.isLoggedin, async (req, res) => {
     if (!editorSelectResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
     } else {
-            if(editorSelectResult[0] == null){  
-                res.status(200).send(defaultRes.successFalse(statusCode.NO_CONTENT, resMessage.EMPTY_WORK));    // 작품이 존재하지 않습니다         
-            } else {
-                const editorDeleteQuery = 'DELETE FROM editor WHERE editor_idx = ? AND user_idx = ?';
-                const editorDeleteResult = await db.queryParam_Arr(editorDeleteQuery, [req.body.editor_idx, req.decoded.idx]);
+        if (editorSelectResult[0] == null) {
+            res.status(200).send(defaultRes.successFalse(statusCode.NO_CONTENT, resMessage.EMPTY_WORK));    // 작품이 존재하지 않습니다         
+        } else {
+            const editorDeleteQuery = 'DELETE FROM editor WHERE editor_idx = ? AND user_idx = ?';
+            const editorDeleteResult = await db.queryParam_Arr(editorDeleteQuery, [req.body.editor_idx, req.decoded.idx]);
 
-                if(!editorDeleteResult) {
-                    res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
-                } 
-                else{
+            if (!editorDeleteResult) {
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
+            }
+            else {
                 res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_DELETE_WORK));    // 작품 삭제 성공
             }
         }
