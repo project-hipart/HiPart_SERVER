@@ -39,13 +39,40 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
             title: [],
             content: [],
         }
+        var resEdiData = {// 에디터 데이터
+            user_nickname: "",
+            user_img: "",
+            user_type: 0,
+            detail_platform: 0,
+            detail_oneline: "",
+            detail_detail: "",
+            detail_appeal: "",
+            detail_want: "",
+            thumbnail: [],
+            url: [],
+            title: [],
+            content: [],
+        }
+        var resEtcData = {// 기타 데이터
+            user_nickname: "",
+            user_img: "",
+            user_type: 0,
+            detail_platform: 0,
+            detail_oneline: "",
+            detail_detail: "",
+            detail_appeal: "",
+            detail_want: "",
+            thumbnail: [],
+            url: [],
+            title: [],
+            content: [],
+        }
 
         var resTransData = {//번역가 데이터
             user_nickname: "",
             user_img: "",
             user_type: 0,
             detail_platform: 0,
-            detail_subscriber: "",
             detail_oneline: "",
             detail_detail: "",
             detail_appeal: "",
@@ -90,9 +117,37 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
 
                 break;
             case 2: //에디터 
-                console.log("에디");
-                // const SelectALLQuery = "SELECT * FROM we WHERE done=0 ORDER BY createdAt";
-                // const SelectALLResult = await db.queryParam_None(getWebtoonQuery);
+                const SelectDetailQuery2 = "SELECT *" +
+                    " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
+                    " JOIN editor ON user.user_idx = editor.user_idx" +
+                    " WHERE user_nickname=?";
+                const SelectDetailResult2 = await db.queryParam_Arr(SelectDetailQuery2, [req.params.nickname]);
+
+                if (!SelectDetailResult2) {
+                    res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
+                } else {
+                    resEdiData.user_nickname = SelectDetailResult2[0].user_nickname;
+                    resEdiData.user_img = SelectDetailResult2[0].user_img;
+                    resEdiData.user_type = SelectDetailResult2[0].user_type;
+                    resEdiData.pick = SelectDetailResult2[0].pick;
+                    resEdiData.detail_platform = SelectDetailResult2[0].detail_platform;
+                    resEdiData.detail_subscriber = SelectDetailResult2[0].detail_subscriber;
+                    resEdiData.detail_oneline = SelectDetailResult2[0].detail_oneline;
+                    resEdiData.detail_detail = SelectDetailResult2[0].detail_detail;
+                    resEdiData.detail_appeal = SelectDetailResult2[0].detail_appeal;
+                    resEdiData.detail_want = SelectDetailResult2[0].detail_want;
+                    resEdiData.concept = SelectDetailResult2[0].concept;
+                    resEdiData.lang = SelectDetailResult2[0].lang;
+                    resEdiData.pd = SelectDetailResult2[0].pd;
+                    resEdiData.etc = SelectDetailResult2[0].etc;
+                    for (let i = 0; i < SelectDetailResult2.length; i++) {
+                        resEdiData.thumbnail.push(SelectDetailResult2[i].thumbnail);
+                        resEdiData.url.push(SelectDetailResult2[i].url);
+                        resEdiData.title.push(SelectDetailResult2[i].title);
+                        resEdiData.content.push(SelectDetailResult2[i].content);
+                    }
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resEdiData }));
+                }
                 break;
             case 3: //번역가
                 SelectDetailQuery3 = "SELECT *" +
@@ -127,9 +182,37 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
                 break;
             case 4: //기타
-                console.log("기타");
-                // const SelectALLQuery = "SELECT * FROM we WHERE done=0 ORDER BY createdAt";
-                // const SelectALLResult = await db.queryParam_None(getWebtoonQuery);
+                const SelectDetailQuery4 = "SELECT *" +
+                    " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
+                    " JOIN etc ON user.user_idx = etc.user_idx" +
+                    " WHERE user_nickname=?";
+                const SelectDetailResult4 = await db.queryParam_Arr(SelectDetailQuery4, [req.params.nickname]);
+
+                if (!SelectDetailResult4) {
+                    res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
+                } else {
+                    resEtcData.user_nickname = SelectDetailResult4[0].user_nickname;
+                    resEtcData.user_img = SelectDetailResult4[0].user_img;
+                    resEtcData.user_type = SelectDetailResult4[0].user_type;
+                    resEtcData.pick = SelectDetailResult4[0].pick;
+                    resEtcData.detail_platform = SelectDetailResult4[0].detail_platform;
+                    resEtcData.detail_subscriber = SelectDetailResult4[0].detail_subscriber;
+                    resEtcData.detail_oneline = SelectDetailResult4[0].detail_oneline;
+                    resEtcData.detail_detail = SelectDetailResult4[0].detail_detail;
+                    resEtcData.detail_appeal = SelectDetailResult4[0].detail_appeal;
+                    resEtcData.detail_want = SelectDetailResult4[0].detail_want;
+                    resEtcData.concept = SelectDetailResult4[0].concept;
+                    resEtcData.lang = SelectDetailResult4[0].lang;
+                    resEtcData.pd = SelectDetailResult4[0].pd;
+                    resEtcData.etc = SelectDetailResult4[0].etc;
+                    for (let i = 0; i < SelectDetailResult4.length; i++) {
+                        resEtcData.thumbnail.push(SelectDetailResult4[i].thumbnail);
+                        resEtcData.url.push(SelectDetailResult4[i].url);
+                        resEtcData.title.push(SelectDetailResult4[i].title);
+                        resEtcData.content.push(SelectDetailResult4[i].content);
+                    }
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resEtcData }));
+                }
                 break;
             default:
                 console.log("옳바르지 않은 값");

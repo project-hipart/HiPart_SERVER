@@ -45,7 +45,7 @@ router.get('/:category/:select', async (req, res) => {// 문자열로만 된거 
         case 4://기타 선택
             const SelectQuery4 = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE etc=?";
-            const SelectResult4 = await db.queryParam_Arr(SelectQuery3, req.params.select);
+            const SelectResult4 = await db.queryParam_Arr(SelectQuery4, req.params.select);
             if (!SelectResult4) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 오류"));
             } else {

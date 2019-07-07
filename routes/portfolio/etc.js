@@ -28,7 +28,7 @@ router.post('/', upload.single('thumbnail'), authUtil.isLoggedin, async (req, re
 // 작품 삭제
 router.delete('/', authUtil.isLoggedin, async (req, res) => {
     const etcSelectQuery = 'SELECT etc_idx FROM etc WHERE user_idx = ? AND etc_idx = ? ';
-    const etcSelectResult = await db.queryParam_Arr(etcSelectQuery, [req.decoded.idx, req.body.etc_idx]);
+    const etcSelectResult = await db.queryParam_Arr(etcSelectQuery, [req.decoded.idx, req.body.work_idx]);
 
     console.log(etcSelectResult);
 
@@ -39,7 +39,7 @@ router.delete('/', authUtil.isLoggedin, async (req, res) => {
             res.status(200).send(defaultRes.successFalse(statusCode.NO_CONTENT, resMessage.EMPTY_WORK));    // 작품이 존재하지 않습니다         
         } else {
             const etcDeleteQuery = 'DELETE FROM etc WHERE etc_idx = ? AND user_idx = ?';
-            const etcDeleteResult = await db.queryParam_Arr(etcDeleteQuery, [req.body.etc_idx, req.decoded.idx]);
+            const etcDeleteResult = await db.queryParam_Arr(etcDeleteQuery, [req.body.work_idx, req.decoded.idx]);
 
             if (!etcDeleteResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러

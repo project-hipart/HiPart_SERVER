@@ -51,13 +51,27 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
         }
     } else {//로그인 상태
 
+        const userFindQuery = "SELECT * FROM user WHERE user_idx = ?"
+        const userFindResult = await db.queryParam_Arr(userFindQuery, [req.decoded.idx]);
+        let nickname = userFindResult[0].user_nickname;
         const userQuery = "SELECT user_nickname,concept, lang, pd, etc" +
             " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
             " WHERE user.user_idx=?"
         const userResult = await db.queryParam_Arr(userQuery, [req.decoded.idx]);
-        let nickname = userResult[0].user_nickname;
         /* 추천 알고리즘 */
-        if (userResult[0].concept == 0) {// 자기 취향을 선택안한사람
+        if (userResult[0] == null) {
+            const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
+                " detail_platform,  detail_oneline, concept, lang, pd, etc" +
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
+                " ORDER BY createdAt DESC LIMIT 4"
+            const selectResult = await db.queryParam_None(selectQuery);
+            if (!selectResult) {
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
+            } else {
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, selectResult }));
+            }
+        }
+        else if (userResult[0].concept == 0) {// 자기 취향을 선택안한사람
             const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
                 " detail_platform,  detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +

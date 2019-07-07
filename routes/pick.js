@@ -37,9 +37,9 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
 
 
 })
-router.delete('/:nickname', authUtil.isLoggedin, async (req, res) => {
+router.delete('/', authUtil.isLoggedin, async (req, res) => {
     const selectUserQuery = "SELECT user_idx FROM user WHERE user_nickname = ?"
-    const selectUserResult = await db.queryParam_Arr(selectUserQuery, [req.params.nickname]);
+    const selectUserResult = await db.queryParam_Arr(selectUserQuery, [req.body.nickname]);
 
     if (!selectUserResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));

@@ -17,8 +17,31 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
 
     switch (flag) {
         case 0://전체 보기 
-            // const SelectALLQuery = "SELECT * FROM we WHERE done=0 ORDER BY createdAt";
-            // const SelectALLResult = await db.queryParam_None(getWebtoonQuery);
+            const resAllData = [];
+            const SelectAllQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx ORDER BY createdAt desc";
+            const SelectAllResult = await db.queryParam_None(SelectAllQuery);
+            for (let i = 0; i < SelectAllResult.length; i++) {
+                const item = {
+                    pickState: "",
+                    info: []
+                }
+                const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, SelectAllResult[i].user_idx]);
+                if (SelectPickResult[0] == null) {
+                    item.pickState = 0;
+                } else {
+                    item.pickState = 1;
+                }
+                item.info.push(SelectAllResult[i]);
+                resAllData.push(item);
+            }
+            if (!SelectAllResult) {
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
+            } else {
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resAllData));
+            }
+
             break;
         case 1://크리에이터 보기 
             const resCreData = [];
@@ -47,7 +70,30 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             }
             break;
         case 2://에디터 보기 
-
+            const resEdiData = [];
+            const SelectEdiQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=?";
+            const SelectEdiResult = await db.queryParam_Arr(SelectEdiQuery, [2]);
+            for (let i = 0; i < SelectEdiResult.length; i++) {
+                const item = {
+                    pickState: "",
+                    info: []
+                }
+                const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, SelectEdiResult[i].user_idx]);
+                if (SelectPickResult[0] == null) {
+                    item.pickState = 0;
+                } else {
+                    item.pickState = 1;
+                }
+                item.info.push(SelectEdiResult[i]);
+                resEdiData.push(item);
+            }
+            if (!SelectEdiResult) {
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
+            } else {
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resEdiData));
+            }
             break;
         case 3://번역가 보기 
             const resTransData = [];
@@ -76,7 +122,30 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             }
             break;
         case 4://기타 보기 
-
+            const resEtcData = [];
+            const SelectEtcQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=?";
+            const SelectEtcResult = await db.queryParam_Arr(SelectEtcQuery, [4]);
+            for (let i = 0; i < SelectEtcResult.length; i++) {
+                const item = {
+                    pickState: "",
+                    info: []
+                }
+                const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, SelectEtcResult[i].user_idx]);
+                if (SelectPickResult[0] == null) {
+                    item.pickState = 0;
+                } else {
+                    item.pickState = 1;
+                }
+                item.info.push(SelectEtcResult[i]);
+                resEtcData.push(item);
+            }
+            if (!SelectEtcResult) {
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
+            } else {
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resEtcData));
+            }
             break;
 
         default:
