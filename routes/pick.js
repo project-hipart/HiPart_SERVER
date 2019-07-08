@@ -57,7 +57,6 @@ router.delete('/', authUtil.isLoggedin, async (req, res) => {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
                 res.status(200).send(defaultRes.successTrue(statusCode.OK, "픽 취소 성공"));
-
             }
         }
 
