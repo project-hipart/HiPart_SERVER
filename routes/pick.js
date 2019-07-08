@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const authUtil = require("../module/utils/authUtils");
+var moment = require('moment');
 
 const defaultRes = require('../module/utils/utils');
 const statusCode = require('../module/utils/statusCode');
@@ -21,12 +22,18 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
             res.status(200).send(defaultRes.successFalse(statusCode.OK, "닉네임을 가진 유저가 없습니다."));
         } else {
             const insertPickQuery = 'INSERT INTO picklist (pick_from,pick_to) VALUES (?, ?)';
-            const insertPickResult = await db.queryParam_Arr(insertPickQuery,
-                [req.decoded.idx, selectUserResult[0].user_idx]);
             const updatePickQuery = 'UPDATE user SET pick=pick+1 WHERE user_idx =?';
-            const updatePickResult = await db.queryParam_Arr(updatePickQuery,
-                [selectUserResult[0].user_idx]);
-            if (!insertPickResult) {
+            const insertNotificationQuery = 'INSERT INTO notification (user_idx,content,type,createdAt)  VALUES (?, ?,?,?)'
+
+            const insertTransaction = await db.Transaction(async (connection) => {
+                const insertPickResult = await db.queryParam_Arr(insertPickQuery,
+                    [req.decoded.idx, selectUserResult[0].user_idx]);
+                const updatePickResult = await db.queryParam_Arr(updatePickQuery,
+                    [selectUserResult[0].user_idx]);
+                const updateNotificationResult = await db.queryParam_Arr(insertNotificationQuery,
+                    [selectUserResult[0].user_idx, req.decoded.nickname, 1, moment().format('YYYY-MM-DD HH:mm:ss')]);
+            })
+            if (!insertTransaction) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
                 res.status(200).send(defaultRes.successTrue(statusCode.OK, "픽 성공"));
