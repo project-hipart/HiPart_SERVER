@@ -30,7 +30,8 @@ router.post('/', async (req, res) => {
             if (!refreshTokenUpdateResult) {
                 res.status(200).send(defaultRes.successTrue(statusCode.DB_ERROR, "refreshtoken DB등록 오류 "));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SIGNIN_SUCCESS, tokens));
+                const user_type = selectUserResult[0].user_type;
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SIGNIN_SUCCESS, { tokens, user_type }));
             }
 
         } else {
