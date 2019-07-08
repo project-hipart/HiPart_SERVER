@@ -124,7 +124,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                 const SelectDetailResult = await db.queryParam_Arr(SelectDetailQuery, [SelectUserResult[0].user_nickname]);
                 const SelectCreatorQuery = "SELECT *" +
                     " FROM user JOIN creator ON user.user_idx = creator.user_idx" +
-                    " WHERE user_idx=?";
+                    " WHERE user.user_idx=?";
                 const SelectCreatorResult = await db.queryParam_Arr(SelectCreatorQuery, [req.decoded.idx]);
                 if (!SelectDetailResult) {
                     res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
@@ -132,6 +132,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                     if (SelectDetailResult[0] == null) {
                         res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
                     } else {
+                        resCreData.hifive = SelectDetailResult[0].hifive;
                         resCreData.user_nickname = SelectDetailResult[0].user_nickname;
                         resCreData.user_img = SelectDetailResult[0].user_img;
                         resCreData.user_type = SelectDetailResult[0].user_type;
@@ -168,7 +169,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                 const SelectDetailResult2 = await db.queryParam_Arr(SelectDetailQuery2, [SelectUserResult[0].user_nickname]);
                 const SelectEditorQuery = "SELECT *" +
                     " FROM user JOIN editor ON user.user_idx = editor.user_idx" +
-                    " WHERE user_idx=?";
+                    " WHERE user.user_idx=?";
                 const SelectEditorResult = await db.queryParam_Arr(SelectEditorQuery, [req.decoded.idx]);
                 if (!SelectDetailResult2) {
                     res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
@@ -177,6 +178,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                         console.log("기본정보만");
                         res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
                     } else {
+                        resEdiData.hifive = SelectDetailResult2[0].hifive;
                         resEdiData.user_nickname = SelectDetailResult2[0].user_nickname;
                         resEdiData.user_img = SelectDetailResult2[0].user_img;
                         resEdiData.user_type = SelectDetailResult2[0].user_type;
@@ -222,6 +224,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                         console.log("기본정보만");
                         res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
                     } else {
+                        resTransData.hifive = SelectDetailResult3[0].hifive;
                         resTransData.user_nickname = SelectDetailResult3[0].user_nickname;
                         resTransData.user_img = SelectDetailResult3[0].user_img;
                         resTransData.user_type = SelectDetailResult3[0].user_type;
@@ -255,7 +258,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                 const SelectDetailResult4 = await db.queryParam_Arr(SelectDetailQuery4, [SelectUserResult[0].user_nickname]);
                 const SelectEtcQuery = "SELECT *" +
                     " FROM user JOIN editor ON user.user_idx = editor.user_idx" +
-                    " WHERE user_idx=?";
+                    " WHERE user.user_idx=?";
                 const SelectEtcResult = await db.queryParam_Arr(SelectEtcQuery, [req.decoded.idx]);
                 if (!SelectDetailResult4) {
                     res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
@@ -264,6 +267,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                         console.log("기본정보만");
                         res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
                     } else {
+                        resEtcData.hifive = SelectDetailResult4[0].hifive;
                         resEtcData.user_nickname = SelectDetailResult4[0].user_nickname;
                         resEtcData.user_img = SelectDetailResult4[0].user_img;
                         resEtcData.user_type = SelectDetailResult4[0].user_type;
