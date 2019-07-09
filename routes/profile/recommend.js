@@ -37,20 +37,35 @@ const db = require('../../module/pool');
 */
 
 router.get('/', authUtil.checkLogin, async (req, res) => {
-
+    console.log(req.decoded);
     if (req.decoded == "NL") {//로그인 상태가 아닐시
+        const resData = [];
         const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
             " detail_platform,  detail_oneline, concept, lang, pd, etc" +
             " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
             " ORDER BY createdAt DESC LIMIT 4"
         const selectResult = await db.queryParam_None(selectQuery);
+
+        for (let i = 0; i < selectResult.length; i++) {
+            console.log("로그인 x");
+
+            const item = {
+                pickState: 0,
+                info: []
+            }
+
+            item.info.push(selectResult[i]);
+            resData.push(item);
+
+        }
+
         if (!selectResult) {
             res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
         } else {
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", selectResult));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resData));
         }
     } else {//로그인 상태
-
+        console.log(req.decoded.idx);
         const userFindQuery = "SELECT * FROM user WHERE user_idx = ?"
         const userFindResult = await db.queryParam_Arr(userFindQuery, [req.decoded.idx]);
         let nickname = userFindResult[0].user_nickname;
@@ -59,30 +74,79 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
             " WHERE user.user_idx=?"
         const userResult = await db.queryParam_Arr(userQuery, [req.decoded.idx]);
         /* 추천 알고리즘 */
+
         if (userResult[0] == null) {
+            console.log("1");
+            let resData = [];
             const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
                 " detail_platform,  detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
                 " ORDER BY createdAt DESC LIMIT 4"
             const selectResult = await db.queryParam_None(selectQuery);
+            console.log("selectResult");
+            console.log(selectResult);
+            console.log(selectResult.length);
+            for (let i = 0; i < selectResult.length; i++) {
+                console.log("안한사람들");
+
+                const item = {
+                    pickState: "",
+                    info: []
+                }
+
+                const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
+                if (SelectPickResult[0] == null) {
+                    item.pickState = 0;
+                } else {
+                    item.pickState = 1;
+                }
+                item.info.push(selectResult[i]);
+                resData.push(item);
+
+            }
             if (!selectResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, selectResult }));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, resData }));
             }
+
         }
         else if (userResult[0].concept == 0) {// 자기 취향을 선택안한사람
+            let resData = [];
+            console.log("2");
             const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
                 " detail_platform,  detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
                 " ORDER BY createdAt DESC LIMIT 4"
             const selectResult = await db.queryParam_None(selectQuery);
+
+            for (let i = 0; i < selectResult.length; i++) {
+                console.log("안한사람들");
+
+                const item = {
+                    pickState: "",
+                    info: []
+                }
+
+                const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
+                if (SelectPickResult[0] == null) {
+                    item.pickState = 0;
+                } else {
+                    item.pickState = 1;
+                }
+                item.info.push(selectResult[i]);
+                resData.push(item);
+
+            }
             if (!selectResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, selectResult }));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, resData }));
             }
         } else {
+            console.log("3");
             let length = 0;//4개까지 판별 변수
             let resData = [];
             const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
