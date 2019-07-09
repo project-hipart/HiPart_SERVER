@@ -88,7 +88,23 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
 
 })
 
+router.get('/', authUtil.isLoggedin, async (req, res) => {
+    let resData = [];
+    const selectQuery = "SELECT pick_from FROM picklist WHERE pick_to = ?"
+    const selectResult = await db.queryParam_Arr(selectQuery, [req.decoded.idx]);
+    if (!selectResult) {
+        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "디비 오류"));
+    } else { //쿼리문이 성공했을 때
+        for (let i = 0; i < selectResult.length; i++) {
+            const selectUserQuery = "SELECT user_img, user_nickname, user_type,pick ,detail_platform, detail_oneline, concept, lang, pd, etc" +
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user.user_idx=?";
+            const selectUserResult = await db.queryParam_Arr(selectUserQuery, [selectResult[i].pick_from]);
+            resData.push(selectUserResult[0]);
+        }
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, "픽 리스트 조회 성공", resData));
+    }
 
+})
 
 
 module.exports = router;
