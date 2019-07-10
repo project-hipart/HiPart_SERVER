@@ -13,16 +13,13 @@ const db = require('../../module/pool');
 
 router.get('/', authUtil.isLoggedin, async (req, res) => {
 
-    const SelectNotificationQuery = "SELECT type,content,createdAt FROM notification WHERE user_idx =? ORDER BY createdAt DESC";
+    const SelectNotificationQuery = "SELECT notistate FROM user WHERE user_idx = ? ";
     const SelectNotificationResult = await db.queryParam_Arr(SelectNotificationQuery, [req.decoded.idx]);
-    console.log(SelectNotificationResult)
+   
     if (!SelectNotificationResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
-        console.log("==============")
-        const UpdateNotificationQuery = "UPDATE user SET notistate = ? WHERE user_idx =?";
-        const UpdateNotificationResult = await db.queryParam_Arr(UpdateNotificationQuery, [0,req.decoded.idx]);
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectNotificationResult));
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectNotificationResult[0].notistate));
     }
 
 })
