@@ -38,15 +38,14 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
 router.delete('/', authUtil.isLoggedin, async (req, res) => {
 
     const tranDeleteQuery = 'DELETE FROM Today WHERE today_idx = ? ';
-    const tranDeleteResult = await db.queryParam_Arr(tranDeleteQuery, [req.body.work_idx]);
+    for (let i = 0; i < req.body.work_idx.length; i++) {
+        const tranDeleteResult = await db.queryParam_Arr(tranDeleteQuery, [req.body.work_idx[i]]);
 
-    if (!tranDeleteResult) {
-        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
+        if (!tranDeleteResult) {
+            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
+        }
     }
-    else {
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_DELETE_WORK));    // 작품 삭제 성공
-    }
-
+    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_DELETE_WORK));    // 작품 삭제 성공
 
 });
 

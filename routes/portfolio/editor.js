@@ -26,27 +26,28 @@ router.post('/', upload.single('thumbnail'), authUtil.isLoggedin, async (req, re
 // 작품 삭제
 router.delete('/', authUtil.isLoggedin, async (req, res) => {
     const editorSelectQuery = 'SELECT editor_idx FROM editor WHERE user_idx = ? AND editor_idx = ? ';
-    const editorSelectResult = await db.queryParam_Arr(editorSelectQuery, [req.decoded.idx, req.body.work_idx]);
+    for (let i = 0; i < req.body.work_idx.length; i++) {
+        let editorSelectResult = await db.queryParam_Arr(editorSelectQuery, [req.decoded.idx, req.body.work_idx[i]]);
+        if (!editorSelectResult) {
+            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
+        } else if (editorSelectResult[0] == null) {
+            res.status(200).send(defaultRes.successFalse(statusCode.NO_CONTENT, "작품번호가 이상한게 있습니다."));
+        }
 
-    console.log(editorSelectResult);
+    }
 
-    if (!editorSelectResult) {
-        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
-    } else {
-        if (editorSelectResult[0] == null) {
-            res.status(200).send(defaultRes.successFalse(statusCode.NO_CONTENT, resMessage.EMPTY_WORK));    // 작품이 존재하지 않습니다         
-        } else {
-            const editorDeleteQuery = 'DELETE FROM editor WHERE editor_idx = ? AND user_idx = ?';
-            const editorDeleteResult = await db.queryParam_Arr(editorDeleteQuery, [req.body.work_idx, req.decoded.idx]);
+    const editorDeleteQuery = 'DELETE FROM editor WHERE editor_idx = ? AND user_idx = ?';
 
-            if (!editorDeleteResult) {
-                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
-            }
-            else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_DELETE_WORK));    // 작품 삭제 성공
-            }
+    for (let i = 0; i < req.body.work_idx.length; i++) {
+        console.log(req.body.work_idx[i]);
+        let editorDeleteResult = await db.queryParam_Arr(editorDeleteQuery, [req.body.work_idx[i], req.decoded.idx]);
+        if (!editorDeleteResult) {
+            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
         }
     }
+
+    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_DELETE_WORK));    // 작품 삭제 성공
+
 });
 
 module.exports = router;

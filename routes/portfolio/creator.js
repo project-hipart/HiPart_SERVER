@@ -28,28 +28,33 @@ router.post('/', upload.single('thumbnail'), authUtil.isLoggedin, async (req, re
 });
 
 router.delete('/', authUtil.isLoggedin, async (req, res) => {
+
+    console.log("====");
+
+    console.log(req.body);
     const creatorSelectQuery = 'SELECT creator_idx FROM creator WHERE user_idx = ? AND creator_idx = ? ';
-    const creatorSelectResult = await db.queryParam_Arr(creatorSelectQuery, [req.decoded.idx, req.body.work_idx]);
+    for (let i = 0; i < req.body.work_idx.length; i++) {
+        let creatorSelectResult = await db.queryParam_Arr(creatorSelectQuery, [req.decoded.idx, req.body.work_idx[i]]);
+        if (!creatorSelectResult) {
+            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
+        } else if (creatorSelectResult[0] == null) {
+            res.status(200).send(defaultRes.successFalse(statusCode.NO_CONTENT, "작품번호가 이상한게 있습니다."));
+        }
 
-    console.log(creatorSelectResult);
+    }
 
-    if (!creatorSelectResult) {
-        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
-    } else {
-        if (creatorSelectResult[0] == null) {
-            res.status(200).send(defaultRes.successFalse(statusCode.NO_CONTENT, resMessage.EMPTY_WORK));    // 작품이 존재하지 않습니다         
-        } else {
-            const creatorDeleteQuery = 'DELETE FROM creator WHERE creator_idx = ? AND user_idx = ?';
-            const creatorDeleteResult = await db.queryParam_Arr(creatorDeleteQuery, [req.body.work_idx, req.decoded.idx]);
+    const creatorDeleteQuery = 'DELETE FROM creator WHERE creator_idx = ? AND user_idx = ?';
 
-            if (!creatorDeleteResult) {
-                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
-            }
-            else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_DELETE_WORK));    // 작품 삭제 성공
-            }
+    for (let i = 0; i < req.body.work_idx.length; i++) {
+        console.log(req.body.work_idx[i]);
+        let creatorDeleteResult = await db.queryParam_Arr(creatorDeleteQuery, [req.body.work_idx[i], req.decoded.idx]);
+        if (!creatorDeleteResult) {
+            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));    // DB 에러
         }
     }
+
+    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_DELETE_WORK));    // 작품 삭제 성공
+
 });
 
 module.exports = router;
