@@ -10,5 +10,6 @@ router.use("/main", require("./main/index"));
 router.use("/filter", require("./filter"));
 router.use("/pick", require("./pick"));
 router.use("/hifive", require("./hifive"));
-router.use("/mypage", require("./mypage"));
+router.use("/mypage", require("./mypage/index"));
+router.use("/myinfo", require("./myinfo"));
 module.exports = router;
