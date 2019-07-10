@@ -74,7 +74,7 @@ router.delete('/', authUtil.isLoggedin, async (req, res) => {
 })
 router.get('/', authUtil.isLoggedin, async (req, res) => {
     let resData = [];
-    const selectQuery = "SELECT pick_to FROM picklist WHERE pick_from = ?"
+    const selectQuery = "SELECT * FROM picklist WHERE pick_from = ?"
     const selectResult = await db.queryParam_Arr(selectQuery, [req.decoded.idx]);
     if (!selectResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "디비 오류"));
@@ -85,7 +85,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
                 info: []
             }
             const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
-            const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
+            const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].pick_to]);
             if (SelectPickResult[0] == null) {
                 item.pickState = 0;
             } else {
