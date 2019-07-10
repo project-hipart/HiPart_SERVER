@@ -29,9 +29,10 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
                 const UpdateHifiveQuery = "UPDATE user SET hifive =hifive+1 WHERE user_nickname = ?"
                 const insertHifivelistQuery = 'INSERT INTO hifivelist (hifive_from,hifive_to) VALUES (?, ?)';
                 const insertNotificationQuery = 'INSERT INTO notification (user_idx,content,type,createdAt)  VALUES (?, ?,?,?)'
+                const UpdateNotificationQuery = "UPDATE user SET notistate = ? WHERE user_idx =?";
 
                 const insertTransaction = await db.Transaction(async (connection) => {
-
+                    const UpdateNotificationResult = await db.queryParam_Arr(UpdateNotificationQuery, [1, selectUserResult[0].user_idx]);
                     const UpdatePointResult = await connection.query(UpdatePointQuery, [req.decoded.idx]);
                     const UpdateHifiveResult = await connection.query(UpdateHifiveQuery, [req.body.nickname]);
                     const insertHifivelistResult = await connection.query(insertHifivelistQuery,
@@ -55,15 +56,25 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
 
 
 })
-router.get('/:nickname', async (req, res) => {
+router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
 
-    const SelectQuery = "SELECT user_number FROM user WHERE user_nickname = ?"
+    let resData = {
+        number: "",
+        nickname: "",
+        point: 0
+    }
+    const SelectQuery = "SELECT * FROM user WHERE user_nickname = ?"
     const SelectResult = await db.queryParam_Arr(SelectQuery, [req.params.nickname]);
+    const SelectPointQuery = "SELECT * FROM user WHERE user_idx = ?"
+    const SelectPointResult = await db.queryParam_Arr(SelectPointQuery, [req.decoded.idx]);
     if (!SelectResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
 
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectResult[0].user_number));
+        resData.number = SelectResult[0].user_number;
+        resData.nickname = SelectResult[0].user_nickname;
+        resData.point = SelectPointResult[0].point;
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resData));
 
     }
 
