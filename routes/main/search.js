@@ -20,12 +20,13 @@ const db = require('../../module/pool');
 // });
 router.get('/:keyword', authUtil.isLoggedin, async (req, res) => {
 
-    const SelectQuery = "SELECT user_img, user_nickname, user_type,pick, detail_platform, detail_oneline, concept,lang,pd,etc" +
+    console.log("req.params: ", req.params);
+    const SelectQuery = "SELECT *" +
         " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_nickname=?"
 
 
     const selectResult = await db.queryParam_Arr(SelectQuery, req.params.keyword);
-    console.log(selectResult);
+    console.log("A", selectResult);
     if (!selectResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
@@ -44,8 +45,10 @@ router.get('/:keyword', authUtil.isLoggedin, async (req, res) => {
             item.pickState = 1;
         }
 
+
         item.info.push(selectResult[0]);
         resData.push(item);
+        console.log("searchResData", resData);
         res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resData));
     }
 
