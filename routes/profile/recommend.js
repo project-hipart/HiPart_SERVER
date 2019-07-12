@@ -62,7 +62,7 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
         if (!selectResult) {
             res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
         } else {
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resData));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resData));
         }
     } else {//로그인 상태
         console.log(req.decoded.idx);
@@ -81,7 +81,7 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
             const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
                 " detail_platform,  detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
-                " ORDER BY createdAt DESC LIMIT 4"
+                " ORDER BY createdAt DESC LIMIT 5"
             const selectResult = await db.queryParam_None(selectQuery);
             console.log("selectResult");
             console.log(selectResult);
@@ -94,21 +94,24 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
                     info: []
                 }
 
-                const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
-                const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
-                if (SelectPickResult[0] == null) {
-                    item.pickState = 0;
-                } else {
-                    item.pickState = 1;
+                if (selectResult[i].user_idx != req.decoded.idx) {
+                    const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                    const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
+                    if (SelectPickResult[0] == null) {
+                        item.pickState = 0;
+                    } else {
+                        item.pickState = 1;
+                    }
+                    item.info.push(selectResult[i]);
+                    resData.push(item);
                 }
-                item.info.push(selectResult[i]);
-                resData.push(item);
+
 
             }
             if (!selectResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, resData }));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { nickname, resData }));
             }
 
         }
@@ -118,7 +121,7 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
             const selectQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick, " +
                 " detail_platform,  detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx" +
-                " ORDER BY createdAt DESC LIMIT 4"
+                " ORDER BY createdAt DESC LIMIT 5"
             const selectResult = await db.queryParam_None(selectQuery);
 
             for (let i = 0; i < selectResult.length; i++) {
@@ -129,21 +132,24 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
                     info: []
                 }
 
-                const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
-                const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
-                if (SelectPickResult[0] == null) {
-                    item.pickState = 0;
-                } else {
-                    item.pickState = 1;
+                if (selectResult[i].user_idx != req.decoded.idx) {
+                    const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                    const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
+                    if (SelectPickResult[0] == null) {
+                        item.pickState = 0;
+                    } else {
+                        item.pickState = 1;
+                    }
+                    item.info.push(selectResult[i]);
+                    resData.push(item);
                 }
-                item.info.push(selectResult[i]);
-                resData.push(item);
+
 
             }
             if (!selectResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, resData }));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { nickname, resData }));
             }
         } else {
             console.log("3");
@@ -165,17 +171,18 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
                         pickState: "",
                         info: []
                     }
-
-                    const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
-                    const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
-                    if (SelectPickResult[0] == null) {
-                        item.pickState = 0;
-                    } else {
-                        item.pickState = 1;
+                    if (selectResult[i].user_idx != req.decoded.idx) {
+                        const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+                        const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[i].user_idx]);
+                        if (SelectPickResult[0] == null) {
+                            item.pickState = 0;
+                        } else {
+                            item.pickState = 1;
+                        }
+                        item.info.push(selectResult[i]);
+                        resData.push(item);
+                        length++;
                     }
-                    item.info.push(selectResult[i]);
-                    resData.push(item);
-                    length++;
                 }
                 if (length == 4) {
                     break;
@@ -213,7 +220,7 @@ router.get('/', authUtil.checkLogin, async (req, res) => {
             if (!selectResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { nickname, resData }));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { nickname, resData }));
             }
         }
 

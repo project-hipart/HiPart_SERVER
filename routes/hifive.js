@@ -43,10 +43,10 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
                 if (insertTransaction) {
                     res.status(200).send(defaultRes.successTrue(statusCode.OK, "연락 성공"));
                 } else {
-                    res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 오류"));
+                    res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
                 }
             } else {
-                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 오류"));
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             }
 
 
@@ -74,7 +74,7 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
         resData.number = SelectResult[0].user_number;
         resData.nickname = SelectResult[0].user_nickname;
         resData.point = SelectPointResult[0].point;
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resData));
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resData));
 
     }
 

@@ -14,7 +14,8 @@ const db = require('../../module/pool');
 
 router.post('/', authUtil.isLoggedin, async (req, res) => {
 
-    const insertTodayQuery = 'INSERT INTO Today (after1,before1,trans_idx) VALUES (?,?, ?)';
+    console.log("body", req.body);
+    const insertTodayQuery = 'INSERT INTO Today (before1,after1,trans_idx) VALUES (?,?, ?)';
     const insertTransQuery = 'INSERT INTO translator (user_idx) VALUES (?)';
 
     const insertTransaction = await db.Transaction(async (connection) => {

@@ -39,7 +39,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             if (!SelectAllResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resAllData));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resAllData));
             }
 
             break;
@@ -66,7 +66,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             if (!SelectCreResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resCreData));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resCreData));
             }
             break;
         case 2://에디터 보기 
@@ -92,7 +92,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             if (!SelectEdiResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resEdiData));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resEdiData));
             }
             break;
         case 3://번역가 보기 
@@ -118,7 +118,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             if (!SelectTransResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resTransData));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resTransData));
             }
             break;
         case 4://기타 보기 
@@ -144,7 +144,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             if (!SelectEtcResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
-                res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resEtcData));
+                res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resEtcData));
             }
             break;
 

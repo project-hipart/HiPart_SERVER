@@ -20,7 +20,7 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
         service: 'gmail',
         auth: {
             user: 'hhyyeon0214@gmail.com',  // 필원오빠 껄로 바꿔야하고
-            pass: '__'  // git 에 올리지마
+            pass: '__wl193102'  // git 에 올리지마
         }
     });
 

@@ -34,7 +34,7 @@ const authUtil = {
     },
     checkLogin: async (req, res, next) => {
         var token = req.headers.token;
-
+        console.log(token);
         if (!token) {
             req.decoded = "NL";
             next();

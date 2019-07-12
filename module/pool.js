@@ -14,7 +14,7 @@ module.exports = {
       var connection = await pool.getConnection(); // connection을 pool에서 하나 가져온다.
       result = (await connection.query(query)) || null; // query문의 결과 || null 값이 result에 들어간다.
     } catch (err) {
-      connection.rollback(() => {});
+      connection.rollback(() => { });
       next(err);
     } finally {
       pool.releaseConnection(connection); // waterfall 에서는 connection.release()를 사용했지만, 이 경우 pool.releaseConnection(connection) 을 해준다.
@@ -22,18 +22,21 @@ module.exports = {
     }
   },
   queryParam_Arr: async (...args) => {
+    console.log("Arr 도착");
     const query = args[0];
     const value = args[1]; // array
     let result;
-
+    console.log(query, " ", value)
     try {
       var connection = await pool.getConnection(); // connection을 pool에서 하나 가져온다.
       result = (await connection.query(query, value)) || null; // 두 번째 parameter에 배열 => query문에 들어갈 runtime 시 결정될 value
+
     } catch (err) {
-      connection.rollback(() => {});
+      connection.rollback(() => { });
       next(err);
     } finally {
       pool.releaseConnection(connection); // waterfall 에서는 connection.release()를 사용했지만, 이 경우 pool.releaseConnection(connection) 을 해준다.
+      console.log("result2", result);
       return result;
     }
   },
@@ -41,20 +44,20 @@ module.exports = {
     const query = inputquery;
     const value = inputvalue;
     let result;
-    console.log(inputquery,inputvalue);
+    console.log(inputquery, inputvalue);
     try {
       var connection = await pool.getConnection();
       result = (await connection.query(query, value)) || null;
       //console.log("result:", result);
     } catch (err) {
       console.log(err);
-      connection.rollback(() => {});
+      connection.rollback(() => { });
       next(err);
     } finally {
       pool.releaseConnection(connection);
       //console.log("result", result);
       return result;
-      
+
     }
   },
   Transaction: async (...args) => {

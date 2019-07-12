@@ -22,7 +22,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
         console.log("==============")
         const UpdateNotificationQuery = "UPDATE user SET notistate = ? WHERE user_idx =?";
         const UpdateNotificationResult = await db.queryParam_Arr(UpdateNotificationQuery, [0,req.decoded.idx]);
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectNotificationResult));
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, SelectNotificationResult));
     }
 
 })

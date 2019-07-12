@@ -14,7 +14,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
     const selectQuery = "SELECT * FROM hifivelist WHERE hifive_to = ?"
     const selectResult = await db.queryParam_Arr(selectQuery, [req.decoded.idx]);
     if (!selectResult) {
-        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "디비 오류"));
+        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else { //쿼리문이 성공했을 때
         for (let i = 0; i < selectResult.length; i++) {
             const item = {
