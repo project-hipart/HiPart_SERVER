@@ -83,10 +83,10 @@ module.exports = {
   SUCCESS_INSERT_BANNER: "배너 등록 성공",
   SUCCESS_LIST_BANNER: "배너 조회 성공",
   FAILED_INSERT_BANNER: "배너 등록 실패",
-  
+
   CLICK_POINT_BANNER: "배너 포인트 획득",
   REQUEST_ADVERTISE_BANNER: "배너 광고신청",
-  ALREADY_GOT_POINT:"이미 팜을 받은 유저입니다",
+  ALREADY_GOT_POINT: "이미 팜을 받은 유저입니다",
 
   SUCCESS_APPLY_BANNER: "광고 신청 성공",
   FAILED_APPLY_BANNER: "이미 신청된 광고 입니다",
@@ -98,5 +98,8 @@ module.exports = {
   NOT_DUPLICATED: " 중복된 값이 없습니다.",
   DUPLICATED: " 이미 중복된 값이 있습니다.",
 
+  NOT_AUTH: "권한이 없습니다.",
+  SUCCESS_SELECT: "조회 성공",
+  FAILED_SELECT: "조회 실패",
 
 };

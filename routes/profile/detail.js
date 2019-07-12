@@ -75,7 +75,7 @@ router.get('/creator/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
             }
 
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
 
         }
     }
@@ -147,7 +147,7 @@ router.get('/editor/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
             }
 
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
 
         }
     }
@@ -216,7 +216,7 @@ router.get('/translator/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
             }
 
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
 
 
         }
@@ -287,7 +287,7 @@ router.get('/etc/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
 
             }
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
 
         }
     }
@@ -408,7 +408,7 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
                         }
                     }
 
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resCreData }));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resCreData }));
 
                 }
 
@@ -449,7 +449,7 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
                         }
                     }
 
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resEdiData }));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resEdiData }));
 
 
                 }
@@ -491,7 +491,7 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
                         }
                     }
 
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resTransData }));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resTransData }));
 
 
                 }
@@ -532,7 +532,7 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
                         }
 
                     }
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", { hifiveState, resEtcData }));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resEtcData }));
 
 
                 }

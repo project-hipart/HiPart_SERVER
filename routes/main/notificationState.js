@@ -19,7 +19,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
     if (!SelectNotificationResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectNotificationResult[0].notistate));
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, SelectNotificationResult[0].notistate));
     }
 
 })

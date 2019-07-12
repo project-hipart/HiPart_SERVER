@@ -12,4 +12,5 @@ router.use("/pick", require("./pick"));
 router.use("/hifive", require("./hifive"));
 router.use("/mypage", require("./mypage/index"));
 router.use("/myinfo", require("./myinfo"));
+router.use("/admin", require("./admin"));
 module.exports = router;

@@ -22,7 +22,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
 
 
             if (!SelectResult1) {
-                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 鞓る"));
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
                 if (SelectResult1[0] == null) {
                     res.status(200).send(defaultRes.successTrue(statusCode.OK, "靹标车", SelectResult1));
@@ -48,7 +48,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
                     }
 
 
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "臁绊殞 靹标车", resData));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resData));
                 }
 
 
@@ -60,10 +60,10 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
             const SelectResult2 = await db.queryParam_Arr(SelectQuery2, req.params.select);
 
             if (!SelectResult2) {
-                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 鞓る"));
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
                 if (SelectResult2[0] == null) {
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "靹标车", SelectResult2));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, SelectResult2));
                 } else {
                     const resData = [];
 
@@ -86,7 +86,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
                     }
 
 
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "臁绊殞 靹标车", resData));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resData));
                 }
             }
             break;
@@ -95,10 +95,10 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE pd=?";
             const SelectResult3 = await db.queryParam_Arr(SelectQuery3, req.params.select);
             if (!SelectResult3) {
-                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 鞓る"));
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
                 if (SelectResult3[0] == null) {
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "靹标车", SelectResult3));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, SelectResult3));
                 } else {
                     const resData = [];
 
@@ -121,7 +121,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
                     }
 
 
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "臁绊殞 靹标车", resData));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resData));
                 }
             }
             break;
@@ -130,10 +130,10 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE etc=?";
             const SelectResult4 = await db.queryParam_Arr(SelectQuery4, req.params.select);
             if (!SelectResult4) {
-                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 鞓る"));
+                res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
                 if (SelectResult4[0] == null) {
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "靹标车", SelectResult4));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, SelectResult4));
                 } else {
                     const resData = [];
 
@@ -156,7 +156,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// 氍
                     }
 
 
-                    res.status(200).send(defaultRes.successTrue(statusCode.OK, "臁绊殞 靹标车", resData));
+                    res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resData));
                 }
             }
             break;

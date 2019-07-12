@@ -22,34 +22,39 @@ router.get('/:keyword', authUtil.isLoggedin, async (req, res) => {
 
     console.log("req.params: ", req.params);
     const SelectQuery = "SELECT *" +
-        " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_nickname=?"
+        " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_nickname LIKE ?"
 
 
-    const selectResult = await db.queryParam_Arr(SelectQuery, req.params.keyword);
+    const selectResult = await db.queryParam_Arr(SelectQuery, "%" + req.params.keyword + "%");
     console.log("A", selectResult);
     if (!selectResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
-        const resData = [];
-
-        const item = {
-            pickState: 0,
-            info: []
-        }
-
-        const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
-        const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[0].user_idx]);
-        if (SelectPickResult[0] == null) {
-            item.pickState = 0;
+        if (selectResult[0] == null) {
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 결과 없음"));
         } else {
-            item.pickState = 1;
+            const resData = [];
+
+            const item = {
+                pickState: 0,
+                info: []
+            }
+
+            const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+            const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, selectResult[0].user_idx]);
+            if (SelectPickResult[0] == null) {
+                item.pickState = 0;
+            } else {
+                item.pickState = 1;
+            }
+
+
+            item.info.push(selectResult[0]);
+            resData.push(item);
+            console.log("searchResData", resData);
+            res.status(200).send(defaultRes.successTrue(statusCode.OK,resMessage.SUCCESS_SELECT, resData));
         }
 
-
-        item.info.push(selectResult[0]);
-        resData.push(item);
-        console.log("searchResData", resData);
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resData));
     }
 
 

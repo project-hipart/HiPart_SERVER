@@ -32,7 +32,7 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {
                     [req.decoded.idx, selectUserResult[0].user_idx]);
                 const updatePickResult = await db.queryParam_Arr(updatePickQuery,
                     [selectUserResult[0].user_idx]);
-                const updateNotificationResult = await db.queryParam_Arr(insertNotificationQuery,
+                const insertNotificationResult = await db.queryParam_Arr(insertNotificationQuery,
                     [selectUserResult[0].user_idx, req.decoded.nickname, 1, moment().format('YYYY-MM-DD HH:mm:ss')]);
             })
             if (!insertTransaction) {
@@ -77,7 +77,7 @@ router.get('/', authUtil.isLoggedin, async (req, res) => {
     const selectQuery = "SELECT * FROM picklist WHERE pick_from = ?"
     const selectResult = await db.queryParam_Arr(selectQuery, [req.decoded.idx]);
     if (!selectResult) {
-        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "디비 오류"));
+        res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else { //쿼리문이 성공했을 때
         for (let i = 0; i < selectResult.length; i++) {
             const item = {

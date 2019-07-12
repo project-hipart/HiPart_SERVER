@@ -26,7 +26,7 @@ router.put('/', authUtil.isLoggedin, async (req, res) => {
             req.body.detail_want, req.decoded.idx,
             req.body.concept, req.body.lang, req.body.pd, req.body.etc, moment().format('YYYY-MM-DD HH:mm:ss')]);
         if (!insertResult) {
-            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 오류"));
+            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
         } else {
             res.status(200).send(defaultRes.successTrue(statusCode.OK, "성공"));
         }
@@ -41,7 +41,7 @@ router.put('/', authUtil.isLoggedin, async (req, res) => {
             req.body.detail_want, req.decoded.idx,
             req.body.concept, req.body.lang, req.body.pd, req.body.etc, req.decoded.idx]);
         if (!updateResult) {
-            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, "DB 오류"));
+            res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
         } else {
             res.status(200).send(defaultRes.successTrue(statusCode.OK, "성공"));
         }
