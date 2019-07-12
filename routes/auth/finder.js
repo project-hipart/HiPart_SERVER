@@ -45,7 +45,7 @@ router.get('/pwd/:email/:number', async (req, res) => { //
     if(!selectPwResult){
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));     // 회원정보 조회 실패
     }else {
-        if(selectPwResult[0].user_email == null){   // user_email(아이디)가 존재하지 않을 경우
+        if(selectPwResult[0] == null){   // user_email(아이디)가 존재하지 않을 경우
             // 이메일로 비밀번호를 보내줌
             res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.NOT_CORRECT_INFO));      // 올바르지 않은 정보 입니다
         } else {    // user_email이 존재하는 경우
