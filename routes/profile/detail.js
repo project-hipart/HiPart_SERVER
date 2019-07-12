@@ -16,12 +16,24 @@ router.get('/creator/:nickname', authUtil.isLoggedin, async (req, res) => {
         res.status(200).send(defaultRes.successTrue(statusCode.OK, "만족하는 유저가 없습니다."));
     } else {
         var hifiveState = 0;
+        var pickState = 0;
+
+        const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+        const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, SelectUserResult[0].user_idx]);
+        if (SelectPickResult[0] == null) {
+            pickState = 0;
+        } else {
+            pickState = 1;
+        }
+
         const type = Number(SelectUserResult[0].user_type);
         const SelectHifveQuery = "SELECT * FROM hifivelist WHERE hifive_from =? AND hifive_to =?";
         const SelectHifveResult = await db.queryParam_Arr(SelectHifveQuery, [req.decoded.idx, SelectUserResult[0].user_idx]);
         if (SelectHifveResult[0] != null) {
             hifiveState = 1;
         }
+
+
         var resData = {// 크리에이터 데이터
             user_nickname: "",
             user_img: "",
@@ -47,6 +59,7 @@ router.get('/creator/:nickname', authUtil.isLoggedin, async (req, res) => {
             " WHERE user.user_idx=?";
         console.log(SelectUserResult[0].user_idx);
         const SelectCreatorResult = await db.queryParam_Arr(SelectCreatorQuery, [SelectUserResult[0].user_idx]);
+
         if (!SelectDetailResult) {
             res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
         } else {
@@ -75,7 +88,7 @@ router.get('/creator/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
             }
 
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, pickState, resData }));
 
         }
     }
@@ -86,6 +99,16 @@ router.get('/creator/:nickname', authUtil.isLoggedin, async (req, res) => {
 router.get('/editor/:nickname', authUtil.isLoggedin, async (req, res) => {
     const SelectUserQuery = "SELECT * FROM user WHERE user_nickname = ?"
     const SelectUserResult = await db.queryParam_Arr(SelectUserQuery, [req.params.nickname]);
+
+    var pickState = 0;
+
+    const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+    const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, SelectUserResult[0].user_idx]);
+    if (SelectPickResult[0] == null) {
+        pickState = 0;
+    } else {
+        pickState = 1;
+    }
 
     if (SelectUserResult[0] == null) {
         res.status(200).send(defaultRes.successTrue(statusCode.OK, "만족하는 유저가 없습니다."));
@@ -147,7 +170,7 @@ router.get('/editor/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
             }
 
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, pickState, resData }));
 
         }
     }
@@ -156,6 +179,16 @@ router.get('/editor/:nickname', authUtil.isLoggedin, async (req, res) => {
 router.get('/translator/:nickname', authUtil.isLoggedin, async (req, res) => {
     const SelectUserQuery = "SELECT * FROM user WHERE user_nickname = ?"
     const SelectUserResult = await db.queryParam_Arr(SelectUserQuery, [req.params.nickname]);
+
+    var pickState = 0;
+
+    const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+    const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, SelectUserResult[0].user_idx]);
+    if (SelectPickResult[0] == null) {
+        pickState = 0;
+    } else {
+        pickState = 1;
+    }
 
     if (SelectUserResult[0] == null) {
         res.status(200).send(defaultRes.successTrue(statusCode.OK, "만족하는 유저가 없습니다."));
@@ -216,7 +249,7 @@ router.get('/translator/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
             }
 
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, pickState, resData }));
 
 
         }
@@ -226,6 +259,16 @@ router.get('/translator/:nickname', authUtil.isLoggedin, async (req, res) => {
 router.get('/etc/:nickname', authUtil.isLoggedin, async (req, res) => {
     const SelectUserQuery = "SELECT * FROM user WHERE user_nickname = ?"
     const SelectUserResult = await db.queryParam_Arr(SelectUserQuery, [req.params.nickname]);
+
+    var pickState = 0;
+
+    const SelectPickQuery = "SELECT * FROM picklist WHERE pick_from=? AND pick_to=?";
+    const SelectPickResult = await db.queryParam_Arr(SelectPickQuery, [req.decoded.idx, SelectUserResult[0].user_idx]);
+    if (SelectPickResult[0] == null) {
+        pickState = 0;
+    } else {
+        pickState = 1;
+    }
 
     if (SelectUserResult[0] == null) {
         res.status(200).send(defaultRes.successTrue(statusCode.OK, "만족하는 유저가 없습니다."));
@@ -287,7 +330,7 @@ router.get('/etc/:nickname', authUtil.isLoggedin, async (req, res) => {
                 }
 
             }
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, resData }));
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, { hifiveState, pickState, resData }));
 
         }
     }
@@ -502,7 +545,7 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
                     " WHERE user_nickname=?";
                 const SelectDetailResult4 = await db.queryParam_Arr(SelectDetailQuery4, [req.params.nickname]);
                 const SelectEtcQuery = "SELECT *" +
-                    " FROM user JOIN editor ON user.user_idx = editor.user_idx" +
+                    " FROM user JOIN etc ON user.user_idx = etc.user_idx" +
                     " WHERE user.user_idx=?";
                 const SelectEtcResult = await db.queryParam_Arr(SelectEtcQuery, [SelectUserResult[0].user_idx]);
                 if (!SelectDetailResult4) {
@@ -524,7 +567,7 @@ router.get('/:nickname', authUtil.isLoggedin, async (req, res) => {
                     resEtcData.hifive = SelectDetailResult4[0].hifive;
                     if (SelectEtcResult) {
                         for (let i = 0; i < SelectEtcResult.length; i++) {
-                            resEtcData.work_idx.push(SelectEtcResult[i].editor_idx);
+                            resEtcData.work_idx.push(SelectEtcResult[i].etc_idx);
                             resEtcData.thumbnail.push(SelectEtcResult[i].thumbnail);
                             resEtcData.url.push(SelectEtcResult[i].url);
                             resEtcData.title.push(SelectEtcResult[i].title);
