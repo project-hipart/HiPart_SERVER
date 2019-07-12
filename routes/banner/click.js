@@ -9,7 +9,7 @@ const statusCode = require('../../module/utils/statusCode');
 const resMessage = require('../../module/utils/responseMessage')
 const db = require('../../module/pool');
 
-router.post('/', authUtil.isLoggedin, async (req, res) => {  // 유저에게 줄 보너스와 배너에 저장되있는 유저의 idx를 SELECT
+router.put('/', authUtil.isLoggedin, async (req, res) => {  // 유저에게 줄 보너스와 배너에 저장되있는 유저의 idx를 SELECT
     const selectSimpleQuery = 'SELECT banner_simple.bonus, banner_simple.banner_idx FROM banner_simple WHERE banner_idx = ?';
     const selectUserQuery = 'SELECT * FROM banner_simple_list WHERE banner_idx = ? AND user_idx=?';   // banner_idx, user_idx
 
@@ -32,7 +32,7 @@ router.post('/', authUtil.isLoggedin, async (req, res) => {  // 유저에게 줄
                 const updateClickResult = await connection.query(updateClickQuery, [selectSimpleResult[0].bonus, req.decoded.idx]);
 
                 const insertBannerResult = await connection.query(insertBannerQuery, [req.body.banner_idx, req.decoded.idx]);
-              
+
             });
             console.log("성공");
             const insertNotificationResult = await db.queryParam_Arr(insertNotificationQuery,

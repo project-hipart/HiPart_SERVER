@@ -13,10 +13,12 @@ const db = require('../../module/pool');
 
 router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
 
+    console.log(req.parms);
     const flag = Number(req.params.flag);
 
     switch (flag) {
         case 0://전체 보기 
+        
             const resAllData = [];
             const SelectAllQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx ORDER BY createdAt desc";
@@ -39,6 +41,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             if (!SelectAllResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
+                console.log(resAllData);
                 res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resAllData));
             }
 
@@ -46,7 +49,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
         case 1://크리에이터 보기 
             const resCreData = [];
             const SelectCreQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=?";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=? ORDER BY createdAt desc";
             const SelectCreResult = await db.queryParam_Arr(SelectCreQuery, [1]);
             for (let i = 0; i < SelectCreResult.length; i++) {
                 const item = {
@@ -72,7 +75,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
         case 2://에디터 보기 
             const resEdiData = [];
             const SelectEdiQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=?";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=? ORDER BY createdAt desc";
             const SelectEdiResult = await db.queryParam_Arr(SelectEdiQuery, [2]);
             for (let i = 0; i < SelectEdiResult.length; i++) {
                 const item = {
@@ -98,7 +101,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
         case 3://번역가 보기 
             const resTransData = [];
             const SelectTransQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=?";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=? ORDER BY createdAt desc";
             const SelectTransResult = await db.queryParam_Arr(SelectTransQuery, [3]);
             for (let i = 0; i < SelectTransResult.length; i++) {
                 const item = {
@@ -124,7 +127,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
         case 4://기타 보기 
             const resEtcData = [];
             const SelectEtcQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=?";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE user_type=? ORDER BY createdAt desc";
             const SelectEtcResult = await db.queryParam_Arr(SelectEtcQuery, [4]);
             for (let i = 0; i < SelectEtcResult.length; i++) {
                 const item = {

@@ -85,7 +85,16 @@ router.get('/creator', authUtil.isLoggedin, async (req, res) => {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
         if (SelectDetailResult[0] == null) {
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
+            if (SelectCreatorResult) {
+                for (let i = 0; i < SelectCreatorResult.length; i++) {
+                    resCreData.work_idx.push(SelectCreatorResult[i].creator_idx);
+                    resCreData.thumbnail.push(SelectCreatorResult[i].thumbnail);
+                    resCreData.url.push(SelectCreatorResult[i].url);
+                    resCreData.title.push(SelectCreatorResult[i].title);
+                    resCreData.content.push(SelectCreatorResult[i].content);
+                }
+            }
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resCreData));
         } else {
             resCreData.hifive = SelectDetailResult[0].hifive;
             resCreData.user_nickname = SelectDetailResult[0].user_nickname;
@@ -152,8 +161,16 @@ router.get('/editor', authUtil.isLoggedin, async (req, res) => {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
         if (SelectDetailResult2[0] == null) {
-            console.log("기본정보만");
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
+            if (SelectEditorResult) {
+                for (let i = 0; i < SelectEditorResult.length; i++) {
+                    resEdiData.work_idx.push(SelectEditorResult[i].editor_idx);
+                    resEdiData.thumbnail.push(SelectEditorResult[i].thumbnail);
+                    resEdiData.url.push(SelectEditorResult[i].url);
+                    resEdiData.title.push(SelectEditorResult[i].title);
+                    resEdiData.content.push(SelectEditorResult[i].content);
+                }
+            }
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resEdiData));
         } else {
             resEdiData.hifive = SelectDetailResult2[0].hifive;
             resEdiData.user_nickname = SelectDetailResult2[0].user_nickname;
@@ -220,7 +237,15 @@ router.get('/translator', authUtil.isLoggedin, async (req, res) => {
     } else {
         if (SelectDetailResult3[0] == null) {
             console.log("기본정보만");
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
+            if (SelectTransResult) {
+                for (let i = 0; i < SelectTransResult.length; i++) {
+                    resTransData.work_idx.push(SelectTransResult[i].today_idx);
+                    resTransData.before.push(SelectTransResult[i].before1);
+                    resTransData.after.push(SelectTransResult[i].after1);
+
+                }
+            }
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resTransData));
         } else {
             resTransData.hifive = SelectDetailResult3[0].hifive;
             resTransData.user_nickname = SelectDetailResult3[0].user_nickname;
@@ -284,8 +309,16 @@ router.get('/etc', authUtil.isLoggedin, async (req, res) => {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
     } else {
         if (SelectDetailResult4[0] == null) {
-            console.log("기본정보만");
-            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", SelectUserResult[0]));
+            if (SelectEtcResult) {
+                for (let i = 0; i < SelectEtcResult.length; i++) {
+                    resEtcData.work_idx.push(SelectEtcResult[i].etc_idx);
+                    resEtcData.thumbnail.push(SelectEtcResult[i].thumbnail);
+                    resEtcData.url.push(SelectEtcResult[i].url);
+                    resEtcData.title.push(SelectEtcResult[i].title);
+                    resEtcData.content.push(SelectEtcResult[i].content);
+                }
+            }
+            res.status(200).send(defaultRes.successTrue(statusCode.OK, "조회 성공", resEtcData));
         } else {
             resEtcData.hifive = SelectDetailResult4[0].hifive;
             resEtcData.user_nickname = SelectDetailResult4[0].user_nickname;

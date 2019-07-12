@@ -21,7 +21,7 @@ router.post('/', upload.single('thumbnail'), authUtil.isLoggedin, async (req, re
     if (!insertResult) {
         res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.FAILED_INSERT_WORK));
     } else {
-        res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_INSERT_WORK));
+        res.status(200).send(defaultRes.successTrue(statusCode.OK, "성공"));
     }
 
 
