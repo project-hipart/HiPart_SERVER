@@ -13,10 +13,12 @@ const db = require('../../module/pool');
 
 router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
 
+    console.log(req.parms);
     const flag = Number(req.params.flag);
 
     switch (flag) {
         case 0://전체 보기 
+        
             const resAllData = [];
             const SelectAllQuery = "SELECT user.user_idx,user_img, user_nickname, user_type,pick ,detail_platform,  detail_oneline, concept, lang, pd, etc" +
                 " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx ORDER BY createdAt desc";
@@ -39,6 +41,7 @@ router.get('/:flag', authUtil.isLoggedin, async (req, res) => {
             if (!SelectAllResult) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
             } else {
+                console.log(resAllData);
                 res.status(200).send(defaultRes.successTrue(statusCode.OK, resMessage.SUCCESS_SELECT, resAllData));
             }
 
