@@ -17,7 +17,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// �
     switch (category) {
         case 1://컨셉 선택
             const SelectQuery1 = "SELECT *" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE concept=? ORDER BY createdAt desc";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE concept=?";
             const SelectResult1 = await db.queryParam_Arr(SelectQuery1, req.params.select);
 
 
@@ -56,7 +56,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// �
             break;
         case 2://언어 선택
             const SelectQuery2 = "SELECT *" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE lang=? ORDER BY createdAt desc";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE lang=?";
             const SelectResult2 = await db.queryParam_Arr(SelectQuery2, req.params.select);
 
             if (!SelectResult2) {
@@ -92,7 +92,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// �
             break;
         case 3://PD 선택
             const SelectQuery3 = "SELECT *" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE pd=? ORDER BY createdAt desc";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE pd=?";
             const SelectResult3 = await db.queryParam_Arr(SelectQuery3, req.params.select);
             if (!SelectResult3) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
@@ -127,7 +127,7 @@ router.get('/:category/:select', authUtil.isLoggedin, async (req, res) => {// �
             break;
         case 4://기타 선택
             const SelectQuery4 = "SELECT *" +
-                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE etc=? ORDER BY createdAt desc";
+                " FROM user JOIN user_detail ON user.user_idx = user_detail.user_idx WHERE etc=?";
             const SelectResult4 = await db.queryParam_Arr(SelectQuery4, req.params.select);
             if (!SelectResult4) {
                 res.status(200).send(defaultRes.successFalse(statusCode.DB_ERROR, resMessage.DB_ERROR));
